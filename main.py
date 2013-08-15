@@ -137,7 +137,9 @@ def measure_program_check():
     return checkProgram_list
 
 ##Here we create the table for measure_programs and also create the relationships between the measures and programs tables.
-##This table uses to foreign keys as the primary key.
+##This table uses to foreign keys as the primary key. 
+
+
 
 def measure_program_CreateInsert():
     measure_program_list = []
@@ -147,13 +149,22 @@ def measure_program_CreateInsert():
                 program_id integer REFERENCES programs (id) ON UPDATE RESTRICT,\
                 value BOOLEAN,\
                 PRIMARY KEY (measure_id, program_id))")
+                
     checkProgram_list = measure_program_check()
+    
+    ##A query is ran to retrieve the program names and the primary keys associated with them from the programs table.  
+    ##They are both paired into a tuple and placed into a list.  The same thing is then repeated with the measure names and their primary keys
     cur.execute("SELECT id, program_name FROM programs")
     prog_idNameList = cur.fetchall()
     
     cur.execute("SELECT measure_id, measure_description FROM measures")
     measure_idNameList = cur.fetchall()
-
+    
+    ##Here the relationships for the measure_program table are created.  The list created by calling measure_program_check()
+    ##is iterated over using a for loop.  There are two other for loops that compare the values in the lists programs and ids, and the
+    ##measures and their ids.  This is to see if the names are the same and when they are assign the appropriate key value in the new table.
+    ## A list of tuples with the measure ids and program ids for the correct measures are then returned.
+    
     measure_program = []
     for i in range(len(checkProgram_list)):
       for m in measure_idNameList:
@@ -164,16 +175,17 @@ def measure_program_CreateInsert():
           p_id = p[0]
           measure_info = (m_id, p_id)
           measure_program.append(measure_info)
-
+    ##Using the execute many function we can simply use string formatting inside the insert statement to populate the query with the 
+    ##correct values in each tuple in the list.  
     query = "INSERT INTO measure_program (measure_id, program_id) VALUES(%s, %s)"
    
     cur.executemany(query, measure_program)
     con.commit()
                 
 def main():
-    measure_program_check()  
     writeProgs()
     writeMeasures()
+    measure_program_check()  
     measure_program_CreateInsert()
     
 
