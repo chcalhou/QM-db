@@ -17,4 +17,5 @@ Example
 
 The data used in my example is of clinical quality measure data.  The spreadsheet has a list of government clinical quality 
 programs in the top row.  Then going down the rows there is a quality measure on each row with associated id numbers and info.
-Under each program if there is a "1" in a cell in the same column indicates that measure is in that program.  
+Under each program if there is a "1" in a cell in the same column indicates that the measure in the same row as
+the 1 is in that program.  
